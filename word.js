@@ -1,7 +1,13 @@
 const Letter = require('./letter');
 
-const Word = function() {
-  this.letterObjArr = [];
+const Word = function(wordStr) {
+  const letterArr = wordStr.split('');
+  console.log('letterArr: ' + letterArr);
+
+  this.letterObjArr = letterArr.map((char) => {
+    console.log('char: ' + char);
+    return new Letter(char);
+  })
 
   this.displayWord = function() {
     const stringArr = this.letterObjArr.map(function(letter) {
@@ -10,9 +16,9 @@ const Word = function() {
     return stringArr.join('');
   };
 
-  this.myFunc = function(inputChar) {
+  this.checkLetters = function(inputChar) {
     this.letterObjArr.forEach(function(letter) {
-      letter.check()
+      letter.check(inputChar);
     })
   };
 };
