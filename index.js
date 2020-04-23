@@ -31,7 +31,7 @@ const wordGuessGame = {
 };
 
 
-const guessWord = function(wordObj) {
+const guessWord = function(wordObj, wordChosen) {
   inquirer.prompt([
     {
       type: 'input',
@@ -40,20 +40,25 @@ const guessWord = function(wordObj) {
     }
   ]).then((answer) => {
     wordObj.checkLetters(answer.guess);
-    console.log(wordObj.displayWord());
-    if (!wordObj.isGuessed) {
-      guessWord(wordObj);
+    const displayedWord = wordObj.displayWord();
+    console.log(displayedWord);
+
+    if (wordChosen === displayedWord) {
+      console.log('You got it right! Next word!!');
+    } else {
+      guessWord(wordObj, wordChosen);
     }
   });
 }
 
 const playGame = function() {
-  const wordChosen = wordGuessGame.getWord();
+  const wordChosen = wordGuessGame.getWord().toLowerCase();
   wordGuessGame.deleteWordFromArr();
   console.log(wordChosen);
-  const wordObj = new Word(wordChosen.toLowerCase());
+  const wordObj = new Word(wordChosen);
 
-  guessWord(wordObj);
+  guessWord(wordObj, wordChosen);
+  playGame();
 }
 
 // If (wordGuessGame.wordArr.length > 0)
