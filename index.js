@@ -4,6 +4,8 @@ const Word = require('./word');
 const wordGuessGame = {
   maxGuesses: 10,
 
+  randomIndex: 0,
+
   wordArr: [
     'star wars',
     'avengers',
@@ -18,23 +20,41 @@ const wordGuessGame = {
   // wordObj: new Word(this.getWord()),
 
   getWord: function () {
-    return this.wordArr[Math.floor(Math.random() * this.wordArr.length)];
+    this.randomIndex = Math.floor(Math.random() * this.wordArr.length)
+    return this.wordArr[this.randomIndex];
+  },
+
+  deleteWordFromArr: function () {
+    this.wordArr.splice(this.randomIndex, 1);
   }
 
 };
 
 
-inquirer.prompt([
-  {
-    type: 'input',
-    message: 'Guess a letter!',
-    name: 'guess'
-  }
-]).then((answer) => {
-  console.log(answer.guess);
+const guessWord = function(wordObj) {
+  inquirer.prompt([
+    {
+      type: 'input',
+      message: 'Guess a letter!',
+      name: 'guess'
+    }
+  ]).then((answer) => {
+    wordObj.checkLetters(answer.guess);
+    console.log(wordObj.displayWord());
+    if (!wordObj.isGuessed) {
+      guessWord(wordObj);
+    }
+  });
+}
+
+const playGame = function() {
   const wordChosen = wordGuessGame.getWord();
+  wordGuessGame.deleteWordFromArr();
   console.log(wordChosen);
   const wordObj = new Word(wordChosen.toLowerCase());
-  wordObj.checkLetters(answer.guess);
-  console.log(wordObj.displayWord());
-});
+
+  guessWord(wordObj);
+}
+
+// If (wordGuessGame.wordArr.length > 0)
+playGame();

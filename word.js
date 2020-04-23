@@ -4,6 +4,8 @@ const Word = function(wordStr) {
   const letterArr = wordStr.split('');
   console.log('letterArr: ' + letterArr);
 
+  this.isGuessed = false;
+
   this.letterObjArr = letterArr.map((char) => {
     console.log('char: ' + char);
     return new Letter(char);
@@ -17,9 +19,14 @@ const Word = function(wordStr) {
   };
 
   this.checkLetters = function(inputChar) {
+    let isGuessedFlag = true;
     this.letterObjArr.forEach(function(letter) {
-      letter.check(inputChar);
+      if (!letter.isGuessed) {
+        isGuessedFlag = false;
+        letter.check(inputChar);
+      }
     })
+    this.isGuessed = isGuessedFlag;
   };
 };
 
