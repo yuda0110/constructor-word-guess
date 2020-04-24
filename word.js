@@ -4,7 +4,7 @@ const Word = function(wordStr) {
   const letterArr = wordStr.split('');
   console.log('letterArr: ' + letterArr);
 
-  this.isGuessed = false;
+  this.isCorrect = false;
 
   this.letterObjArr = letterArr.map((char) => {
     console.log('char: ' + char);
@@ -19,15 +19,25 @@ const Word = function(wordStr) {
   };
 
   this.checkLetters = function(inputChar) {
-    let isGuessedFlag = true;
-    this.letterObjArr.forEach(function(letter) {
-      if (!letter.isGuessed) {
-        isGuessedFlag = false;
-        letter.check(inputChar);
+    let isCorrectFlag = false;
+    const remainingLetterObjArr = [];
+
+    this.letterObjArr.forEach((letterObj) => {
+      if (!letterObj.isGuessed) {
+        remainingLetterObjArr.push(letterObj);
+      }
+    });
+
+    remainingLetterObjArr.forEach(function(letter) {
+      if (letter.check(inputChar)) {
+        isCorrectFlag = true;
       }
     })
-    this.isGuessed = isGuessedFlag;
+
+    this.isCorrect = isCorrectFlag;
+    console.log('isCorrect1: ' + this.isCorrect);
   };
+
 };
 
 module.exports = Word;

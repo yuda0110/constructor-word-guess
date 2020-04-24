@@ -9,7 +9,7 @@ const wordGuessGame = {
   wordArr: [
     'star wars',
     'avengers',
-    // 'avatar',
+    'avatar',
     // 'black panther',
     // 'titanic',
     // 'jurassic world',
@@ -42,6 +42,7 @@ const guessWord = function(wordObj, wordChosen) {
     wordObj.checkLetters(answer.guess);
     const displayedWord = wordObj.displayWord();
     console.log(displayedWord);
+    wordObj.isCorrect ? console.log('CORRECT!') : console.log('INCORRECT!');
 
     if (wordChosen === displayedWord) {
       console.log('You got it right! Next word!!');
@@ -58,7 +59,7 @@ const playGame = function() {
   const wordObj = new Word(wordChosen);
 
   guessWord(wordObj, wordChosen);
-  playGame();
+  // playGame();
 }
 
 // If (wordGuessGame.wordArr.length > 0)

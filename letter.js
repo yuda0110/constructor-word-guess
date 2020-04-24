@@ -17,6 +17,7 @@ const Letter = function(char) {
     console.log('underlyingChar: ' + this.underlyingChar);
     this.isGuessed = inputChar === this.underlyingChar;
     console.log('Letter.isGuessed: ' + this.isGuessed);
+    return inputChar === this.underlyingChar;
   }
 }
 
