@@ -73,7 +73,7 @@ const guessWord = function(wordObj, chosenWord) {
     if (chosenWord === displayedWord) {
       console.log('You got it right!');
       if (wordGuessGame.wordArr.length > 0) {
-        console.log('Next word!!');
+        console.log('Next word!!\n===============================');
         playGame();
       } else {
         console.log('You have already guessed all the words :)')
@@ -81,7 +81,7 @@ const guessWord = function(wordObj, chosenWord) {
     } else if (wordGuessGame.gameState.remainingGuesses <= 0) {
       console.log(`You got it wrong! The correct word: ${chosenWord}`);
       if (wordGuessGame.wordArr.length > 0) {
-        console.log('Next word!!');
+        console.log('Next word!!\n===============================');
         playGame();
       } else {
         console.log('You have already guessed all the words :)')
@@ -105,7 +105,6 @@ const playGame = function() {
   wordGuessGame.startNewWord();
   const chosenWord = wordGuessGame.getWord().toLowerCase();
   wordGuessGame.deleteWordFromArr();
-  console.log(chosenWord);
   const wordObj = new Word(chosenWord);
 
   guessWord(wordObj, chosenWord);

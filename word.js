@@ -2,12 +2,9 @@ const Letter = require('./letter');
 
 const Word = function(wordStr) {
   const letterArr = wordStr.split('');
-  console.log('letterArr: ' + letterArr);
-
   this.isCorrect = false;
 
   this.letterObjArr = letterArr.map((char) => {
-    console.log('char: ' + char);
     return new Letter(char);
   })
 
@@ -35,7 +32,6 @@ const Word = function(wordStr) {
     })
 
     this.isCorrect = isCorrectFlag;
-    console.log('isCorrect1: ' + this.isCorrect);
   };
 
 };
