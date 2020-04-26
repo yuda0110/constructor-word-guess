@@ -9,15 +9,13 @@ const wordGuessGame = {
   wordArr: [
     'star wars',
     'avengers',
-    // 'avatar',
+    'avatar',
     // 'black panther',
     // 'titanic',
     // 'jurassic world',
     // 'incredibles',
     // 'the lion king'
   ],
-
-  // wordObj: new Word(this.getWord()),
 
   getWord: function () {
     this.randomIndex = Math.floor(Math.random() * this.wordArr.length)
@@ -34,10 +32,10 @@ const wordGuessGame = {
 
   gameStateFactory: function () {
     return {
-      remainingGuesses: 5
+      remainingGuesses: 5,
+      guessedLetters: []
     }
   }
-
 };
 
 
@@ -68,26 +66,36 @@ const guessWord = function(wordObj, chosenWord) {
       }
     }
   ]).then(answer => {
-    wordObj.checkLetters(answer.guess);
-    const displayedWord = wordObj.displayWord();
-    console.log(displayedWord);
+    const guessedLetter = answer.guess;
+    const guessedLettersArr = wordGuessGame.gameState.guessedLetters;
 
-    if (wordObj.isCorrect) {
-      console.log('CORRECT!')
-    } else {
-      console.log('INCORRECT!');
-      wordGuessGame.gameState.remainingGuesses--;
-      console.log(`${wordGuessGame.gameState.remainingGuesses} guesses remaining!!`);
-    }
-
-    if (chosenWord === displayedWord) {
-      console.log('You got it right!');
-      nextMove();
-    } else if (wordGuessGame.gameState.remainingGuesses <= 0) {
-      console.log(`You got it wrong! The correct word: ${chosenWord}`);
-      nextMove();
-    } else {
+    if (guessedLettersArr.includes(guessedLetter)) {
+      console.log('You have already guessed the letter. Please try another letter.');
       guessWord(wordObj, chosenWord);
+    } else {
+      guessedLettersArr.push(guessedLetter);
+
+      wordObj.checkLetters(guessedLetter);
+      const displayedWord = wordObj.displayWord();
+      console.log(displayedWord);
+
+      if (wordObj.isCorrect) {
+        console.log('CORRECT!')
+      } else {
+        console.log('INCORRECT!');
+        wordGuessGame.gameState.remainingGuesses--;
+        console.log(`${wordGuessGame.gameState.remainingGuesses} guesses remaining!!`);
+      }
+
+      if (chosenWord === displayedWord) {
+        console.log('You got it right!');
+        nextMove();
+      } else if (wordGuessGame.gameState.remainingGuesses <= 0) {
+        console.log(`You got it wrong! The correct word: ${chosenWord}`);
+        nextMove();
+      } else {
+        guessWord(wordObj, chosenWord);
+      }
     }
   }).catch(error => {
     if (error.isTtyError) {
@@ -103,6 +111,7 @@ const guessWord = function(wordObj, chosenWord) {
 
 
 const playGame = () => {
+  console.log('Let\'s guess a movie title!!');
   wordGuessGame.startNewWord();
   const chosenWord = wordGuessGame.getWord().toLowerCase();
   wordGuessGame.deleteWordFromArr();
