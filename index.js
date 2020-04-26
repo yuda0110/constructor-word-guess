@@ -41,6 +41,16 @@ const wordGuessGame = {
 };
 
 
+const nextMove = () => {
+  if (wordGuessGame.wordArr.length > 0) {
+    console.log('Next word!!\n===============================');
+    playGame();
+  } else {
+    console.log('You have already guessed all the words :)')
+  }
+}
+
+
 const guessWord = function(wordObj, chosenWord) {
   inquirer.prompt([
     {
@@ -53,7 +63,7 @@ const guessWord = function(wordObj, chosenWord) {
           || (input.charCodeAt(0) >= 97 && input.charCodeAt(0) <= 122)) {
           return true;
         } else {
-          return 'Invalid value! Please type in only an alphabet.';
+          return 'Invalid input! Please type in only an alphabet.';
         }
       }
     }
@@ -72,20 +82,10 @@ const guessWord = function(wordObj, chosenWord) {
 
     if (chosenWord === displayedWord) {
       console.log('You got it right!');
-      if (wordGuessGame.wordArr.length > 0) {
-        console.log('Next word!!\n===============================');
-        playGame();
-      } else {
-        console.log('You have already guessed all the words :)')
-      }
+      nextMove();
     } else if (wordGuessGame.gameState.remainingGuesses <= 0) {
       console.log(`You got it wrong! The correct word: ${chosenWord}`);
-      if (wordGuessGame.wordArr.length > 0) {
-        console.log('Next word!!\n===============================');
-        playGame();
-      } else {
-        console.log('You have already guessed all the words :)')
-      }
+      nextMove();
     } else {
       guessWord(wordObj, chosenWord);
     }
@@ -101,7 +101,8 @@ const guessWord = function(wordObj, chosenWord) {
   });
 }
 
-const playGame = function() {
+
+const playGame = () => {
   wordGuessGame.startNewWord();
   const chosenWord = wordGuessGame.getWord().toLowerCase();
   wordGuessGame.deleteWordFromArr();
