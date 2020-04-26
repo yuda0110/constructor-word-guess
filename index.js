@@ -9,7 +9,7 @@ const wordGuessGame = {
   wordArr: [
     'star wars',
     'avengers',
-    'avatar',
+    // 'avatar',
     // 'black panther',
     // 'titanic',
     // 'jurassic world',
@@ -66,14 +66,26 @@ const guessWord = function(wordObj, chosenWord) {
       console.log('CORRECT!')
     } else {
       console.log('INCORRECT!');
-      wordGuessGame.gameState.remainingGuesses --;
+      wordGuessGame.gameState.remainingGuesses--;
       console.log(`${wordGuessGame.gameState.remainingGuesses} guesses remaining!!`);
     }
 
     if (chosenWord === displayedWord) {
-      console.log('You got it right! Next word!!');
-    } else if (wordGuessGame.remainingGuesses <= 0) {
+      console.log('You got it right!');
+      if (wordGuessGame.wordArr.length > 0) {
+        console.log('Next word!!');
+        playGame();
+      } else {
+        console.log('You have already guessed all the words :)')
+      }
+    } else if (wordGuessGame.gameState.remainingGuesses <= 0) {
       console.log(`You got it wrong! The correct word: ${chosenWord}`);
+      if (wordGuessGame.wordArr.length > 0) {
+        console.log('Next word!!');
+        playGame();
+      } else {
+        console.log('You have already guessed all the words :)')
+      }
     } else {
       guessWord(wordObj, chosenWord);
     }
@@ -97,12 +109,6 @@ const playGame = function() {
   const wordObj = new Word(chosenWord);
 
   guessWord(wordObj, chosenWord);
-
-  // if (wordGuessGame.wordArr.length > 0) {
-  //   playGame();
-  // } else {
-  //   console.log('You have already guessed all the words :)')
-  // }
 }
 
 playGame();
