@@ -2,7 +2,7 @@ const inquirer = require('inquirer');
 const Word = require('./word');
 
 const wordGuessGame = {
-  maxGuesses: 10,
+  gameState: null,
 
   randomIndex: 0,
 
@@ -26,41 +26,83 @@ const wordGuessGame = {
 
   deleteWordFromArr: function () {
     this.wordArr.splice(this.randomIndex, 1);
+  },
+
+  startNewWord: function () {
+    this.gameState = this.gameStateFactory();
+  },
+
+  gameStateFactory: function () {
+    return {
+      remainingGuesses: 5
+    }
   }
 
 };
 
 
-const guessWord = function(wordObj, wordChosen) {
+const guessWord = function(wordObj, chosenWord) {
   inquirer.prompt([
     {
       type: 'input',
       message: 'Guess a letter!',
-      name: 'guess'
+      name: 'guess',
+      validate: (input) => {
+        if (input.length === 1 &&
+          (input.charCodeAt(0) >= 65 && input.charCodeAt(0) <= 90)
+          || (input.charCodeAt(0) >= 97 && input.charCodeAt(0) <= 122)) {
+          return true;
+        } else {
+          return 'Invalid value! Please type in only an alphabet.';
+        }
+      }
     }
-  ]).then((answer) => {
+  ]).then(answer => {
     wordObj.checkLetters(answer.guess);
     const displayedWord = wordObj.displayWord();
     console.log(displayedWord);
-    wordObj.isCorrect ? console.log('CORRECT!') : console.log('INCORRECT!');
 
-    if (wordChosen === displayedWord) {
-      console.log('You got it right! Next word!!');
+    if (wordObj.isCorrect) {
+      console.log('CORRECT!')
     } else {
-      guessWord(wordObj, wordChosen);
+      console.log('INCORRECT!');
+      wordGuessGame.gameState.remainingGuesses --;
+      console.log(`${wordGuessGame.gameState.remainingGuesses} guesses remaining!!`);
+    }
+
+    if (chosenWord === displayedWord) {
+      console.log('You got it right! Next word!!');
+    } else if (wordGuessGame.remainingGuesses <= 0) {
+      console.log(`You got it wrong! The correct word: ${chosenWord}`);
+    } else {
+      guessWord(wordObj, chosenWord);
+    }
+  }).catch(error => {
+    if (error.isTtyError) {
+      // Prompt couldn't be rendered in the current environment
+      console.log('TtyError: ');
+      console.log(error);
+    } else {
+      // Something else when wrong
+      console.log(error);
     }
   });
 }
 
 const playGame = function() {
-  const wordChosen = wordGuessGame.getWord().toLowerCase();
+  wordGuessGame.startNewWord();
+  const chosenWord = wordGuessGame.getWord().toLowerCase();
   wordGuessGame.deleteWordFromArr();
-  console.log(wordChosen);
-  const wordObj = new Word(wordChosen);
+  console.log(chosenWord);
+  const wordObj = new Word(chosenWord);
 
-  guessWord(wordObj, wordChosen);
-  // playGame();
+  guessWord(wordObj, chosenWord);
+
+  // if (wordGuessGame.wordArr.length > 0) {
+  //   playGame();
+  // } else {
+  //   console.log('You have already guessed all the words :)')
+  // }
 }
 
-// If (wordGuessGame.wordArr.length > 0)
 playGame();
